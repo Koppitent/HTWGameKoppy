@@ -48,3 +48,17 @@ else if deck_build_all_total>=maindeck_total_max {
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 sc_draw_tooltip_text(screen_deck_x+cam_w);
+//————————————————————————————————————————————————————————————————————————————————————————————————————
+draw_set_font(fn_m3x6);
+draw_set_halign(fa_right);
+var deck_analysis_text = "[T] " + (ob_main.show_deck_analysis ? "EIN" : "AUS") + " Deck-Analyse";
+var deck_analysis_color = ob_main.show_deck_analysis ? global.color_friendly : global.color_white;
+var button_x2 = screen_deck_x + cam_w - 10;
+var button_x1 = button_x2 - string_width(deck_analysis_text) - 6;
+sc_drawrectangle(button_x1, screen_main_y+10, button_x2, screen_main_y+21, global.color_black, global.color_black, 1, 0.5, 1, 0);
+sc_drawtext(button_x2-3, screen_main_y+9, deck_analysis_text, deck_analysis_color, c_black, 0.1, 0, 0, -1);
+
+if (ob_main.show_deck_analysis) {
+    sc_draw_deck_analysis();
+}
+//————————————————————————————————————————————————————————————————————————————————————————————————————

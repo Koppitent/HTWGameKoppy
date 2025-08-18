@@ -220,6 +220,17 @@ if turn_splash_timer>0 and battler_turn!=0 {
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 sc_draw_tooltip_text(cam_x+cam_w);
 //————————————————————————————————————————————————————————————————————————————————————————————————————
+draw_set_font(fn_m3x6);
+draw_set_halign(fa_left);
+var analysis_text = "Typ-Analyse " + (ob_main.show_type_analysis ? "EIN" : "AUS") + " [T]";
+var analysis_color = ob_main.show_type_analysis ? global.color_friendly : global.color_white;
+sc_drawrectangle(cam_x+70,cam_y+9,cam_x+74+string_width(analysis_text),cam_y+20,global.color_black,global.color_black,1,0.5,1,0);
+sc_drawtext(cam_x+73,cam_y+8,analysis_text,analysis_color,c_black,0.1,0,0,-1);
+
+if (ob_main.show_type_analysis) {
+    sc_draw_type_analysis_overlay();
+}
+//————————————————————————————————————————————————————————————————————————————————————————————————————
 if (ob_main.playing_tutorial && battler_turn == 1) {
 	var highlight_color = c_yellow;
 	var highlight_alpha = 0.6 + sin(current_time / 200) * 0.3;

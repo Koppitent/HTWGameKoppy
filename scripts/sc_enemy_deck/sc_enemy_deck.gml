@@ -6,6 +6,10 @@ enemycard_maindeck_total=ob_main.enemy_maindeck_size;
 for (var i=0; i<=17; i++;) {
 	enemy_type_chance[i]=0; //0%
 }
+// Initialize global array for type analysis
+for (var i=0; i<=17; i++;) {
+	global.global_enemy_type_chance[i]=0; //0%
+}
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 if argument0<=100 {
 	for (var i=0; i<=17; i++;) {
@@ -645,6 +649,11 @@ else if argument0=212 { //CHAMPION: DUNCAN (ALL)
 			else if i<40 { sc_enemy_deck_addcard(i,-1,10,-2,-2,-2,-1,-1); } //(20) LV 10
 		}
 	}
+}
+//————————————————————————————————————————————————————————————————————————————————————————————————————
+// Copy enemy type chances to global array
+for (var i=0; i<=17; i++;) {
+	global.global_enemy_type_chance[i] = enemy_type_chance[i];
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 }

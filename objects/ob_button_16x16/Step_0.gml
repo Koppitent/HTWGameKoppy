@@ -103,7 +103,6 @@ else { //all other buttons
 					else { ob_main.autoattack_toggle=false; }
 				}
 				else if button_id=6 {
-					// Help Button - opens Help Overlay
 					ob_main.help_screen_toggle=true;
 				}
 			}

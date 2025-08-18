@@ -103,6 +103,11 @@ else if argument0=22 {
 else if argument0=29 {
 	ob_main.textbox_string[0]="Not enough cards in deck. A minimum of " + string(ob_main.maindeck_size_min) + " cards is required for this battle.";
 }
+else if argument0=60 {
+	ob_main.textbox_string[0]="ACHTUNG: Dein Deck hat schwerwiegende Typ-Probleme!";
+	ob_main.textbox_string[1]=global.battle_warning_message;
+	ob_main.textbox_string[2]="Möchtest du trotzdem kämpfen? (Ja/Nein)";
+}
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 else if argument0=30 { //IAN
 	ob_main.textbox_string[0]="GYM LEADER: Ian" + rematch_text + ".\nGYM LOCATION: Iris Town.\nMAIN DECK TYPES: Normal, Flying.";

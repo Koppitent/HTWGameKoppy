@@ -298,11 +298,9 @@ if help_screen=true {
 	sc_drawrectangle(-2,-2,room_width+2,room_height+2,global.color_black,c_white,0,0.9,0,0);
 	
 	if help_total_items > 0 and help_current_index >= 0 and help_current_index < help_total_items {
-		// Zentrierte Position berechnen - echte Bildschirmmitte
 		var center_x = camera_get_view_x(view_camera[0]) + cam_w/2;
 		var center_y = camera_get_view_y(view_camera[0]) + cam_h/2;
 		
-		// Titel
 		sc_drawtext(center_x, center_y - 100, "HELP", global.color_character_light, global.color_black, 1, 1, 0, -1);
 		
 		// Bild anzeigen (wenn vorhanden)
@@ -310,7 +308,7 @@ if help_screen=true {
 		var help_image = help_active_items[help_current_index,1];
 		
 		if help_image != "" {
-			// Zeichne aus sp_help sprite sheet (erwartet Index-Nummer)
+			// Zeichne aus sp_help sprite sheet
 			var help_image_index = real(help_image);
 			if help_image_index >= 0 {
 				// Berechne Position im Sprite Sheet (1 Bild pro Zeile für größere Bilder)

@@ -13,6 +13,18 @@ else if type_chart=true and (mouse_check_button_pressed(mb_left) or mouse_check_
 	type_chart=false;
 }
 //
+// Type analysis toggle
+if keyboard_check_pressed(ord("T")) {
+	if instance_exists(ob_control) {
+		show_type_analysis = !show_type_analysis;
+		sc_playsound(sn_click,50,false,false);
+	}
+	else if instance_exists(ob_deckbuild) {
+		show_deck_analysis = !show_deck_analysis;
+		sc_playsound(sn_click,50,false,false);
+	}
+}
+//
 if credits_screen_toggle=true {
 	credits_screen=true;
 	credits_screen_toggle=false;
@@ -800,6 +812,20 @@ else if event_transition=-1 and event_transition_standby=-1 and fade_black<=0 {
 				else if event_kind[mouse_in_event][roadmap_area]=ref_event_battle or event_kind[mouse_in_event][roadmap_area]=ref_event_gymbattle or
 				event_kind[mouse_in_event][roadmap_area]=ref_event_elitebattle or event_kind[mouse_in_event][roadmap_area]=ref_event_championbattle {
 					if maindeck_used_total<maindeck_size_min { event_conditions=false; }
+					else {
+						var warning_result = sc_battle_warning_check();
+						if warning_result.has_warnings == true && warning_result.severity >= 3 {
+							event_conditions = false;
+							global.battle_warning_message = "";
+							for (var i = 0; i < array_length(warning_result.warning_messages); i++) {
+								global.battle_warning_message += warning_result.warning_messages[i];
+								if (i < array_length(warning_result.warning_messages) - 1) {
+									global.battle_warning_message += "\n";
+								}
+							}
+							global.show_battle_warning = true;
+						}
+					}
 				}
 				//
 				if event_kind[mouse_in_event][roadmap_area]=ref_event_loop and (option_state[opt_challenge]=ch_resolution or option_state[opt_challenge]=ch_resolution_hard) {
@@ -843,7 +869,15 @@ else if event_transition=-1 and event_transition_standby=-1 and fade_black<=0 {
 					if event_kind[mouse_in_event][roadmap_area]=ref_event_tutorial { sc_textbox(2); }
 					else if event_kind[mouse_in_event][roadmap_area]=ref_event_battle or event_kind[mouse_in_event][roadmap_area]=ref_event_gymbattle or
 					event_kind[mouse_in_event][roadmap_area]=ref_event_elitebattle or event_kind[mouse_in_event][roadmap_area]=ref_event_championbattle {
-						sc_textbox(29); }
+						if global.show_battle_warning == true {
+							// Show type analysis warning
+							sc_textbox(60);
+							global.show_battle_warning = false;
+						}
+						else {
+							sc_textbox(29); // Insufficient deck cards
+						}
+					}
 				}
 			}
 			else if money<event_cost[event_kind[mouse_in_event][roadmap_area]] {

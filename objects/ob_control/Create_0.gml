@@ -28,7 +28,6 @@ button_autoattack_id=instance_create_layer(cam_x+cam_w-91,cam_y+197,"instances",
 button_autoattack_id.button_id=4;
 button_create=instance_create_layer(cam_x+cam_w-91,cam_y+180,"instances",ob_button_16x16);
 button_create.button_id=5;
-// Hilfe Button - oben rechts neben Exit Button
 button_help_id=instance_create_layer(cam_x+cam_w-38,cam_y+4,"instances",ob_button_16x16);
 button_help_id.button_id=6;
 //————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -165,6 +164,11 @@ repeat (card_hand_max+1) { //+1 to replace value when using last card when hand 
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 sc_enemy_deck(ob_main.trainer_kind[ob_main.roadmap_area]);
+if (variable_global_exists("global_enemy_type_chance")) {
+    for (var i=0; i<18; i++) {
+        enemy_type_chance[i] = global.global_enemy_type_chance[i];
+    }
+}
 for (var i=0; i<=3; i++;) {
 	enemy_deck_fullcost[i]=0;
 }
@@ -294,6 +298,10 @@ space_poke_possible[0][0]=false;
 for (var i=0; i<=3; i++;) {
 	berry_spawn[i]=0;
 	enemyberry_spawn[i]=0;
+}
+//
+for (var i=0; i<18; i++) {
+	enemy_type_chance[i]=0;
 }
 //
 card_focus=-1; //id
