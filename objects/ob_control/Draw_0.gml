@@ -219,3 +219,108 @@ if turn_splash_timer>0 and battler_turn!=0 {
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 sc_draw_tooltip_text(cam_x+cam_w);
+//————————————————————————————————————————————————————————————————————————————————————————————————————
+if (ob_main.playing_tutorial && battler_turn == 1) {
+	var highlight_color = c_yellow;
+	var highlight_alpha = 0.6 + sin(current_time / 200) * 0.3;
+	var border_width = 3;
+	
+	if (sc_tutorial_conditions(0, -1)) {
+		var btn_x = button_nextturn_id.x;
+		var btn_y = button_nextturn_id.y;
+		var btn_w = button_nextturn_id.sprite_width;
+		var btn_h = button_nextturn_id.sprite_height;
+		
+		draw_rectangle_color(btn_x - border_width, btn_y - border_width, 
+							btn_x + btn_w + border_width, btn_y + btn_h + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, true);
+		draw_set_alpha(highlight_alpha);
+		draw_rectangle_color(btn_x - border_width, btn_y - border_width, 
+							btn_x + btn_w + border_width, btn_y + btn_h + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, false);
+		draw_set_alpha(1);
+	}
+	
+	if (sc_tutorial_conditions(1, -1) && card_draw_points >= card_drawcost_main && card_maindeck_total > 0) {
+		var main_draw_x = cam_x + cam_w - 56;
+		var main_draw_y = cam_y + 188;
+		var main_draw_w = 35;
+		var main_draw_h = 21;
+		
+		draw_rectangle_color(main_draw_x - border_width, main_draw_y - border_width,
+							main_draw_x + main_draw_w + border_width, main_draw_y + main_draw_h + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, true);
+		draw_set_alpha(highlight_alpha);
+		draw_rectangle_color(main_draw_x - border_width, main_draw_y - border_width,
+							main_draw_x + main_draw_w + border_width, main_draw_y + main_draw_h + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, false);
+		draw_set_alpha(1);
+	}
+	
+	if (sc_tutorial_conditions(2, -1) && card_draw_points >= card_drawcost_berry && card_berrydeck_total > 0) {
+		var berry_draw_x = cam_x + 19;
+		var berry_draw_y = cam_y + 188;
+		var berry_draw_w = 39;
+		var berry_draw_h = 21;
+		
+		draw_rectangle_color(berry_draw_x - border_width, berry_draw_y - border_width,
+							berry_draw_x + berry_draw_w + border_width, berry_draw_y + berry_draw_h + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, true);
+		draw_set_alpha(highlight_alpha);
+		draw_rectangle_color(berry_draw_x - border_width, berry_draw_y - border_width,
+							berry_draw_x + berry_draw_w + border_width, berry_draw_y + berry_draw_h + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, false);
+		draw_set_alpha(1);
+	}
+	
+	for (var i = 5; i <= 9; i++) {
+		var should_highlight_for_main = false;
+		var should_highlight_for_berry = false;
+		
+		if (card_hold != -1 && card_hold.card_cat == 0 && sc_tutorial_conditions(3, card_space_id[i])) {
+			should_highlight_for_main = true;
+		}
+		
+		if (card_hold != -1 && card_hold.card_cat == 1 && sc_tutorial_conditions(4, card_space_id[i])) {
+			should_highlight_for_berry = true;
+		}
+		
+		if (should_highlight_for_main || should_highlight_for_berry) {
+			var slot_x = card_space_id[i].x;
+			var slot_y = card_space_id[i].y;
+			var slot_color = should_highlight_for_berry ? c_purple : highlight_color;
+			
+			draw_rectangle_color(slot_x - border_width, slot_y - border_width,
+								slot_x + card_space_id[i].sprite_width + border_width, 
+								slot_y + card_space_id[i].sprite_height + border_width,
+								slot_color, slot_color, slot_color, slot_color, true);
+			draw_set_alpha(highlight_alpha);
+			draw_rectangle_color(slot_x - border_width, slot_y - border_width,
+								slot_x + card_space_id[i].sprite_width + border_width, 
+								slot_y + card_space_id[i].sprite_height + border_width,
+								slot_color, slot_color, slot_color, slot_color, false);
+			draw_set_alpha(1);
+		}
+	}
+	
+	if (sc_tutorial_conditions(5, -1)) {
+		for (var i = 5; i <= 9; i++) {
+			if (card_space_id[i].occupy_id != -1 && !card_space_id[i].occupy_id.already_attacked && !card_space_id[i].occupy_id.card_environment) {
+				var slot_x = card_space_id[i].x;
+				var slot_y = card_space_id[i].y;
+				var attack_color = c_lime;
+				
+				draw_rectangle_color(slot_x - border_width, slot_y - border_width,
+									slot_x + card_space_id[i].sprite_width + border_width, 
+									slot_y + card_space_id[i].sprite_height + border_width,
+									attack_color, attack_color, attack_color, attack_color, true);
+				draw_set_alpha(highlight_alpha);
+				draw_rectangle_color(slot_x - border_width, slot_y - border_width,
+									slot_x + card_space_id[i].sprite_width + border_width, 
+									slot_y + card_space_id[i].sprite_height + border_width,
+									attack_color, attack_color, attack_color, attack_color, false);
+				draw_set_alpha(1);
+			}
+		}
+	}
+}

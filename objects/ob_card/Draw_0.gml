@@ -237,3 +237,37 @@ else if card_face=false {
 		draw_sprite_general(sp_sheet,0,16*29+4,16*0,sprite_width,sprite_height,draw_x,draw_y,1,1,0,overlay_color,overlay_color,overlay_color,overlay_color,1);
 	}
 }
+//————————————————————————————————————————————————————————————————————————————————————————————————————
+if (instance_exists(ob_control) && ob_main.playing_tutorial && ob_control.battler_turn == 1 && card_face == true) {
+	var should_highlight = false;
+	var highlight_color = c_yellow;
+	var border_width = 3;
+	var highlight_alpha = 0.6 + sin(current_time / 200) * 0.3;
+	
+	if (card_cat == 0) { 
+		if (ob_control.turn_num == 1 && (card_id == 019 || card_id == 161 || card_id == 263)) {
+			should_highlight = true; 
+		} else if (ob_control.turn_num == 3 && (card_id == 016 || card_id == 519 || card_id == 276)) {
+			should_highlight = true; 
+		}
+		else if (ob_control.card_hold == id && sc_tutorial_conditions(3, -1)) {
+			should_highlight = true;
+		}
+	} else if (card_cat == 1) { 
+		if (ob_control.card_hold == id && sc_tutorial_conditions(4, -1)) {
+			should_highlight = true;
+			highlight_color = c_purple; 
+		}
+	}
+	
+	if (should_highlight) {
+		draw_rectangle_color(x - border_width, y - border_width,
+							x + sprite_width + border_width, y + sprite_height + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, true);
+		draw_set_alpha(highlight_alpha);
+		draw_rectangle_color(x - border_width, y - border_width,
+							x + sprite_width + border_width, y + sprite_height + border_width,
+							highlight_color, highlight_color, highlight_color, highlight_color, false);
+		draw_set_alpha(1);
+	}
+}

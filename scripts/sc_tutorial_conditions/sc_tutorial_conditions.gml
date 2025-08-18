@@ -64,8 +64,8 @@ else if argument0=2 { //draw berry
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————
 else if argument0=3 { //play main
-	if ob_control.turn_num=1 and ob_control.card_hold.card_id=normal_card_id { return true; }
-	else if ob_control.turn_num=3 and ob_control.card_hold.card_id=misc_card_id { return true; }
+	if ob_control.turn_num=1 and ob_control.card_hold!=-1 and ob_control.card_hold.card_id=normal_card_id { return true; }
+	else if ob_control.turn_num=3 and ob_control.card_hold!=-1 and ob_control.card_hold.card_id=misc_card_id { return true; }
 	else if ob_control.turn_num=5 { return true; }
 	else if ob_control.turn_num=7 {} //can't play
 	else if ob_control.turn_num=9 { return true; }
@@ -84,13 +84,13 @@ else if argument0=4 { //play berry
 	}
 	//
 	if ob_control.turn_num=1 { return true; }
-	else if ob_control.turn_num=3 and berries_held=2 and
+	else if ob_control.turn_num=3 and berries_held=2 and space_slot!=-1 and
 	ob_control.card_space_id[space_slot-5].occupy_id!=-1 and ob_control.card_space_id[space_slot-5].occupy_id.card_id=161 { return true; } //sentret
 	else if ob_control.turn_num=5 { return true; }
 	else if ob_control.turn_num=7 {} //can't play
-	else if ob_control.turn_num=9 and berries_held=2 and
+	else if ob_control.turn_num=9 and berries_held=2 and space_slot!=-1 and
 	ob_control.card_space_id[space_slot-5].occupy_id!=-1 and ob_control.card_space_id[space_slot-5].occupy_id.card_id=191 { return true; } //sunkern
-	else if ob_control.turn_num=11 and
+	else if ob_control.turn_num=11 and space_slot!=-1 and
 	ob_control.card_space_id[space_slot-5].occupy_id!=-1 and ob_control.card_space_id[space_slot-5].occupy_id.card_id=399 { return true; } //bidoof
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————

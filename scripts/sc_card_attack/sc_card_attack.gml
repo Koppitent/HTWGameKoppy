@@ -115,6 +115,16 @@ with (argument1) {
 							}
 						}
 					}
+					if card_target.card_enemy=true and argument0=true and ob_main.playing_tutorial=false {
+						var berry_drop_chance = 25; // % chance
+						if irandom(99) < berry_drop_chance {
+							for (var i=0; i<=3; i++;) {
+								if card_target.consumed_berry[i] > 0 {
+									ob_control.berry_spawn[i] += card_target.consumed_berry[i];
+								}
+							}
+						}
+					}
 					//
 					if sc_glyph_check(card_target,ref_glyph_curse,true) { //glyph: curse
 						var damage_num_id=instance_create_layer(x+29,y+18,"instances",ob_damage_num);
