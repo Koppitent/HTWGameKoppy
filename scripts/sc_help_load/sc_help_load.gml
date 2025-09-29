@@ -4,7 +4,7 @@
 // GAME OVERVIEW & GOALS
 help_data[0,0] = "Your goal is to become Crystal League Champion! Travel through 8 gym leaders in major cities, then face the Elite Four and Champion. Each victory makes you stronger and unlocks new areas to explore!";
 help_data[0,1] = true; // activated
-help_data[0,2] = "0"; // image index in sp_help sprite sheet
+help_data[0,2] = "1"; // image index in sp_help sprite sheet
 
 // DECK BUILDING BASICS
 help_data[1,0] = "To build your deck, click on the deck area on the left side of the main menu. Here you can add Pokemon cards and berries to create your battle deck. Click on cards and berries from your collection into your deck slots to customize your strategy.";
