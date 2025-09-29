@@ -238,36 +238,122 @@ else if card_face=false {
 	}
 }
 //————————————————————————————————————————————————————————————————————————————————————————————————————
-if (instance_exists(ob_control) && ob_main.playing_tutorial && ob_control.battler_turn == 1 && card_face == true) {
+// HIGHLIGHTING SYSTEM (Tutorial + Event System)
+if (card_face == true) {
 	var should_highlight = false;
 	var highlight_color = c_yellow;
 	var border_width = 3;
 	var highlight_alpha = 0.6 + sin(current_time / 200) * 0.3;
 	
-	if (card_cat == 0) { 
-		if (ob_control.turn_num == 1 && (card_id == 019 || card_id == 161 || card_id == 263)) {
-			should_highlight = true; 
-		} else if (ob_control.turn_num == 3 && (card_id == 016 || card_id == 519 || card_id == 276)) {
-			should_highlight = true; 
+	// Tutorial highlighting
+	if (instance_exists(ob_control) && ob_main.playing_tutorial && ob_control.battler_turn == 1) {
+		if (card_cat == 0) { 
+			if (ob_control.turn_num == 1 && (card_id == 019 || card_id == 161 || card_id == 263)) {
+				should_highlight = true; 
+			} else if (ob_control.turn_num == 3 && (card_id == 016 || card_id == 519 || card_id == 276)) {
+				should_highlight = true; 
+			}
+			else if (ob_control.card_hold == id && sc_tutorial_conditions(3, -1)) {
+				should_highlight = true;
+			}
+		} else if (card_cat == 1) { 
+			if (ob_control.card_hold == id && sc_tutorial_conditions(4, -1)) {
+				should_highlight = true;
+				highlight_color = c_purple; 
+			}
 		}
-		else if (ob_control.card_hold == id && sc_tutorial_conditions(3, -1)) {
-			should_highlight = true;
+	}
+	
+	// Event System highlighting for levelups and evolutions
+	if (instance_exists(ob_event) && ob_event.show_deck == true && card_cat == 0) {
+		// LEVELUP highlighting
+		if (ob_event.event_kind == ref_event_levelup) {
+			// Check if card can be leveled up
+			if (card_level < ob_main.card_level_player_limit && card_innate > 0 && 
+				ob_main.money - ob_main.event_cost_standby >= ob_main.event_cost_standby_levelup) {
+				should_highlight = true;
+				highlight_color = c_yellow;
+			}
 		}
-	} else if (card_cat == 1) { 
-		if (ob_control.card_hold == id && sc_tutorial_conditions(4, -1)) {
-			should_highlight = true;
-			highlight_color = c_purple; 
+		// EVOLUTION highlighting  
+		else if (ob_event.event_kind == ref_event_evolution) {
+			// Check if card can evolve
+			if (card_innate > 0) {
+				// Check if this card has evolution data
+				var temp_card_id = card_id;
+				var temp_card_shiny = card_shiny;
+				var temp_card_form_value = card_form_value;
+				
+				// Temporarily set up evolution data
+				sc_pokelist();
+				var can_evolve = (card_evo[0] != -1 && card_evo[0] <= normal_poke_id_max);
+				
+				// Restore original values
+				card_id = temp_card_id;
+				card_shiny = temp_card_shiny;
+				card_form_value = temp_card_form_value;
+				
+				if (can_evolve) {
+					should_highlight = true;
+					highlight_color = c_yellow;
+				}
+			}
+		}
+		// GLYPH highlighting
+		else if (ob_event.event_kind == ref_event_glyph) {
+			// Check if card can receive a glyph
+			if (card_glyph_c == -1 && card_innate > 0 && 
+				card_glyph_a != ob_event.glyph_add_id && card_glyph_b != ob_event.glyph_add_id && card_glyph_c != ob_event.glyph_add_id) {
+				// Additional checks for environment cards
+				var can_add_glyph = true;
+				if (card_environment == true) {
+					if (ob_event.glyph_add_id != ref_glyph_lucky && ob_event.glyph_add_id != ref_glyph_debilitate && 
+						ob_event.glyph_add_id != ref_glyph_ruthless && ob_event.glyph_add_id != ref_glyph_courage) {
+						can_add_glyph = false;
+					}
+				}
+				if (can_add_glyph) {
+					should_highlight = true;
+					highlight_color = c_yellow;
+				}
+			}
+		}
+		// TRIBUTE highlighting
+		else if (ob_event.event_kind == ref_event_tribute) {
+			// Cards that can give tribute (have innate > 0)
+			if (card_innate > 0 && card_environment == false) {
+				should_highlight = true;
+				highlight_color = c_orange; // Different color for tribute donors
+			}
+			// Cards that can receive tribute (innate < innate_max)
+			if (card_innate < innate_max && card_environment == false) {
+				if (should_highlight) {
+					highlight_color = c_lime; // Mixed color if card can both give and receive
+				} else {
+					should_highlight = true;
+					highlight_color = c_aqua; // Different color for tribute receivers
+				}
+			}
 		}
 	}
 	
 	if (should_highlight) {
-		draw_rectangle_color(x - border_width, y - border_width,
-							x + sprite_width + border_width, y + sprite_height + border_width,
-							highlight_color, highlight_color, highlight_color, highlight_color, true);
 		draw_set_alpha(highlight_alpha);
-		draw_rectangle_color(x - border_width, y - border_width,
-							x + sprite_width + border_width, y + sprite_height + border_width,
-							highlight_color, highlight_color, highlight_color, highlight_color, false);
+		// Draw only border lines
+		var x1 = x - border_width;
+		var y1 = y - border_width;
+		var x2 = x + sprite_width + border_width;
+		var y2 = y + sprite_height + border_width;
+		
+		// Top line
+		draw_line_width_color(x1, y1, x2, y1, border_width, highlight_color, highlight_color);
+		// Bottom line
+		draw_line_width_color(x1, y2, x2, y2, border_width, highlight_color, highlight_color);
+		// Left line
+		draw_line_width_color(x1, y1, x1, y2, border_width, highlight_color, highlight_color);
+		// Right line
+		draw_line_width_color(x2, y1, x2, y2, border_width, highlight_color, highlight_color);
+		
 		draw_set_alpha(1);
 	}
 }
